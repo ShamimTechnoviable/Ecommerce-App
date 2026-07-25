@@ -37,6 +37,9 @@
                     🛒 Cart <span class="badge bg-danger">{{ count((array) session('cart')) }}</span>
                 </a>
             </div>
+            <div>
+                <a href="{{ route('order.track') }}" class="btn btn-outline-light btn-sm ms-2">Order Track</a>
+            </div>
         </div>
     </nav>
 

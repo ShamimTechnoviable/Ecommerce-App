@@ -55,7 +55,14 @@
                                         </td>
                                         <td class="fw-bold">{{ $details['name'] }}</td>
                                         <td>৳ {{ number_format($details['price'], 2) }}</td>
-                                        <td>{{ $details['quantity'] }}</td>
+                                        <!-- ✅ অটো-আপডেট কোড (Update বাটন ছাড়া) -->
+                                        <td>
+                                          <form action="{{ route('cart.update', $id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                             <input type="number" name="quantity" value="{{ $details['quantity'] }}" min="1" onchange="this.form.submit()" class="form-control form-control-sm text-center mx-auto" style="width: 65px;">
+                                          </form>
+                                        </td>
                                         <td>৳ {{ number_format($details['price'] * $details['quantity'], 2) }}</td>
                                         <td>
                                             <form action="{{ route('cart.remove', $id) }}" method="POST">

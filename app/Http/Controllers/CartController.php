@@ -36,6 +36,19 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'প্রোডাক্ট কার্টে যোগ হয়েছে!');
     }
 
+    public function updateCart(Request $request, $id)
+{
+    $cart = session()->get('cart', []);
+
+    if(isset($cart[$id])) {
+        // ইনপুট থেকে পাওয়া নতুন কোয়ান্টিটি সেভ হবে
+        $cart[$id]['quantity'] = max(1, (int) $request->quantity); 
+        session()->put('cart', $cart);
+    }
+
+    return redirect()->back()->with('success', 'কার্ট সফলভাবে আপডেট করা হয়েছে!');
+}
+
     // কার্ট পেজ দেখানো
     public function showCart()
     {
