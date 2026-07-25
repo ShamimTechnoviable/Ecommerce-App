@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,7 +17,7 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
-    // ১. ফর্ম ভিউ (অর্ডার এডিট করার সময়)
+    // ১. ফর্ম ভিউ
     public static function form(Form $form): Form
     {
         return $form
@@ -26,7 +27,6 @@ class OrderResource extends Resource
                 Forms\Components\Textarea::make('address')->required(),
                 Forms\Components\TextInput::make('total_amount')->numeric()->required(),
                 
-                // স্ট্যাটাস ড্রপডাউন
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -39,7 +39,7 @@ class OrderResource extends Resource
             ]);
     }
 
-    // ২. টেবিল ভিউ (অর্ডার লিস্টের জন্য)
+    // ২. টেবিল ভিউ
     public static function table(Table $table): Table
     {
         return $table
@@ -49,7 +49,6 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('phone')->label('Phone')->searchable(),
                 Tables\Columns\TextColumn::make('total_amount')->label('Total Price')->sortable(),
 
-                // ইনলাইন স্ট্যাটাস ড্রপডাউন (টেবিল থেকেই সরাসরি পরিবর্তন করা যাবে)
                 Tables\Columns\SelectColumn::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -62,7 +61,6 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Order Date')->dateTime('d M Y, h:i A')->sortable(),
             ])
             ->filters([
-                // স্ট্যাটাস দিয়ে ফিল্টার করার সুবিধা
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -73,6 +71,20 @@ class OrderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                
+                // 👇 ইনভয়েস ডাউনলোড করার নতুন বাটন
+                Tables\Actions\Action::make('downloadInvoice')
+                    ->label('Invoice')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->action(function (Order $record) {
+                        $pdf = Pdf::loadView('invoices.order', ['order' => $record]);
+                        
+                        return response()->streamDownload(
+                            fn () => print($pdf->output()),
+                            "Invoice-Order-{$record->id}.pdf"
+                        );
+                    }),
             ]);
     }
 
