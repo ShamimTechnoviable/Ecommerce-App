@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>আমার ই-কমার্স শপ</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.jpeg') }}">
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -26,9 +27,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">MyShop</a>
-            <div>
-                <a href="/admin" class="btn btn-outline-light btn-sm" target="_blank">Admin Panel</a>
-            </div>
+            @auth
+                <div>
+                 <a href="/admin" class="btn btn-outline-light btn-sm" target="_blank">Admin Panel</a>
+                </div>
+            @endauth
             <div>
                 <a href="{{ route('cart.show') }}" class="btn btn-outline-light me-2">
                     🛒 Cart <span class="badge bg-danger">{{ count((array) session('cart')) }}</span>

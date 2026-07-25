@@ -27,7 +27,8 @@ class AdminPanelProvider extends PanelProvider
         ->id('admin')
         ->path('admin')
         ->login()
-        ->brandName('My Shop') // 👈 এখানে আপনার শপের নাম দিন (লগইন ও সাইডবারে এটি দেখাবে)
+        ->favicon(asset('favicon.jpeg'))
+        ->brandName('Ecommerce App') // 👈 এখানে আপনার শপের নাম দিন (লগইন ও সাইডবারে এটি দেখাবে)
         ->colors([
             'primary' => Color::Amber,
         ])
